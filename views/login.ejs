@@ -18,20 +18,28 @@
 			<div class="login-panel panel panel-default">
 				<div class="panel-heading">Log in</div>
 				<div class="panel-body">
-					<form role="form">
+					<form role="form" action="/login" method="POST">
 						<fieldset>
 							<div class="form-group">
-								<input class="form-control" placeholder="E-mail" name="email" type="email" autofocus="">
+								<input class="form-control" placeholder="Login" name="login" type="text" autofocus="" required>
 							</div>
 							<div class="form-group">
-								<input class="form-control" placeholder="Password" name="password" type="password" value="">
+								<input class="form-control" placeholder="Senha" name="senha" type="password" value="" required>
 							</div>
+							<% if(message) { %>
+								<p>
+								  <label style="color:Red"><%= message %></label>
+								</p>
+							<%}%>
 							<div class="checkbox">
 								<label>
 									<input name="remember" type="checkbox" value="Remember Me">Remember Me
 								</label>
 							</div>
-							<a href="index" class="btn btn-primary">Login</a></fieldset>
+							<div class="form-group">
+								<input class="btn btn-primary" type="submit" value="Login" />
+							</div>
+						</fieldset>
 					</form>
 				</div>
 			</div>
