@@ -1,10 +1,11 @@
+"use strict";
 const express = require('express');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var request = require('request');
-const router = express.Router();
 const app = express();
+const user = require('./usuario')
 app.use(cookieParser()); 
 
 var expiryDate = new Date( Date.now() + 60 * 60 * 1000 ); // 1 hour
@@ -60,24 +61,23 @@ app.route('/login')
     .post((req, res) => {
         console.log('postando')
         console.log(req.session.logado)
-        user_login = req.body.login;
-        user_pass = req.body.senha;
-        string_body = '{ "password": "' + user_pass + '", "username": "' +user_login +'" }'
+        var user_login = req.body.login;
+        var user_pass = req.body.senha;
+        var string_body = '{ "password": "' + user_pass + '", "username": "' +user_login +'" }'
         console.log(string_body);
         request.post({
             headers: {'content-type' : 'application/json', 'Accept': 'application/json'},
             url:     'http://191.252.1.150:8080/api/internal/login',
             body:    string_body
           }, function(error, response, body){
-            resposta = JSON.parse(body)
+            var resposta = JSON.parse(body)
             if(resposta.hasOwnProperty('jwt')){
                 console.log('tem')
                 req.session.logado = true
-                req.session.usuario = user_login
-                req.session.cookie.usuario = user_login
-                req.cookie.usuario = user_login
-                req.session.cookie.jwt = resposta.jwt
-                console.log(res.session)
+                var user_obj = new user.Usuario(user_login, user_pass, resposta.jwt)
+                req.session.usuario = user_obj
+                console.log(req.session)
+                console.log(req.session.usuario)
                 req.session.save()
                 res.render('index', {req}); // 
             }else{
@@ -99,9 +99,45 @@ app.get('/index', function (req, res) {
         console.log(req.session)
     }else{
         console.log('ta logado')
+        console.log(req.session)
     }
     if(req.session.logado){
         res.render('index', {req});
+    }else{
+        res.render('login', {message: "Por favor inicie uma sessão"});
+    }
+})
+
+
+app.get('/network', function (req, res) {
+    console.log('entrando /network')
+    if(req.session.logado == undefined){
+        console.log('nao ta logado')
+        req.session.logado = false
+        console.log(req.session)
+    }else{
+        console.log('ta logado')
+        console.log(req.session)
+    }
+    if(req.session.logado){
+        res.render('network', {req});
+    }else{
+        res.render('login', {message: "Por favor inicie uma sessão"});
+    }
+})
+
+app.get('/organizacao', function (req, res) {
+    console.log('entrando /organizacao')
+    if(req.session.logado == undefined){
+        console.log('nao ta logado')
+        req.session.logado = false
+        console.log(req.session)
+    }else{
+        console.log('ta logado')
+        console.log(req.session)
+    }
+    if(req.session.logado){
+        res.render('organizacao', {req});
     }else{
         res.render('login', {message: "Por favor inicie uma sessão"});
     }
@@ -112,11 +148,6 @@ app.get('/logout', function (req,res){
     req.session.destroy();
     res.render('login', {message: null});
 })
-
-app.get('/widgets', function (req, res) {
-    res.render('widgets');
-})
-
 
 
 app.listen(3000, function () {
