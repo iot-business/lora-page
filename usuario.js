@@ -1,6 +1,7 @@
 "use strict";
-var request = require('request');
-
+var request = require('request-promise');
+var Q = require('q');
+var api = require('./api')
 
 module.exports = {
     Usuario : class Usuario {
@@ -47,29 +48,17 @@ module.exports = {
         }
 
 
-        get_organizations() {
-
-            request.get({
-                headers: {'Accept': 'application/json', 'Grpc-Metadata-Authorization': 'Bearer '+ this.jwt},
-                url:     'http://191.252.1.150:8080/api/internal/profile',
-            }, function(error, response, body){
-                var resposta = JSON.parse(body);
-                if(resposta.hasOwnProperty('error')) {
-                    console.log('não autenticado')
-                }else{
-                    this.organizations = resposta.organizations
-                    console.log(this.organizations)
-                }
-
-            });
-
-
-
-
+        async get_organizations() {
+            console.log('aqui dentro do get orga')
+            this.organizations = await api.get_organizations(this.jwt)
+            return 'ok'
         }
 
-
-
+        async get_users() {
+            console.log('aqui dentro do get users')
+            this.organizations = await api.lista_de_usuarios(this._organizations[0].organizationID, this.jwt)
+            return 'ok'
+        }
 
     }
 
