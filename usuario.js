@@ -10,7 +10,6 @@ module.exports = {
             this.pass = pass;
             this.jwt = jwt;
             this.organizations = [];
-            this.networks = [];
         }
         set login(login) {
             this._login = login;
@@ -40,23 +39,30 @@ module.exports = {
             return this._organizations;
         }
 
-        set networks(networks) {
-            this._networks = networks;
-        }
-        get networks() {
-            return this._networks;
-        }
-
 
         async get_organizations() {
             console.log('aqui dentro do get orga')
-            this.organizations = await api.get_organizations(this.jwt)
+            var orgs = await api.get_organizations(this.jwt)
+            console.log('retorno do get ORGS : ' + orgs);
+            this._organizations = orgs
             return 'ok'
         }
 
         async get_users() {
             console.log('aqui dentro do get users')
-            this.organizations = await api.lista_de_usuarios(this._organizations[0].organizationID, this.jwt)
+            var users = await api.lista_de_usuarios(this._organizations, this.jwt)
+            return 'ok'
+        }
+
+        async get_gateways() {
+            console.log('aqui dentro do get gateways')
+            var users = await api.get_gateways(this._organizations, this.jwt)
+            return 'ok'
+        }
+
+        async get_apps() {
+            console.log('aqui dentro do get apps')
+            var users = await api.get_apps(this._organizations, this.jwt)
             return 'ok'
         }
 

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Lumino - Dashboard</title>
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/font-awesome.min.css" rel="stylesheet">
+	<link href="css/datepicker3.css" rel="stylesheet">
+	<link href="css/styles.css" rel="stylesheet">
+	
+	<!--Custom Font-->
+	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+	<!--[if lt IE 9]>
+	<script src="js/html5shiv.js"></script>
+	<script src="js/respond.min.js"></script>
+	<![endif]-->
+</head>
+<body>
+	<nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar-collapse"><span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span></button>
+				<a class="navbar-brand" href="#"><span>IOT</span>BUSINESS</a>
+			</div>
+		</div><!-- /.container-fluid -->
+	</nav>
+	<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+		<div class="profile-sidebar">
+			<div class="profile-userpic">
+				<img src="http://placehold.it/50/30a5ff/fff" class="img-responsive" alt="">
+			</div>
+			<div class="profile-usertitle">
+				<div class="profile-usertitle-name"><%= req.session.usuario._login %></div>
+				<div class="profile-usertitle-status"><span class="indicator label-success"></span>Online</div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="divider"></div>
+		<form role="search">
+			<div class="form-group">
+				<input type="text" class="form-control" placeholder="Search">
+			</div>
+		</form>
+		<ul class="nav menu">
+            <li><a href="index"><em class="fa fa-dashboard">&nbsp;</em> Dashboard </a></li>
+            <li><a href="organizacao"><em class="fa fa-calendar">&nbsp;</em> Organização </a></li>
+            <li class="active"><a href="gateways"><em class="fa fa-calendar">&nbsp;</em> Gateways </a></li>
+            <li><a href="aplicacoes"><em class="fa fa-calendar">&nbsp;</em> Aplicações</a></li>
+			<li><a href="logout"><em class="fa fa-power-off">&nbsp;</em> Logout</a></li>
+		</ul>
+	</div><!--/.sidebar-->
+		
+	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
+		<div class="row">
+			<ol class="breadcrumb">
+				<li><a href="#">
+					<em class="fa fa-home"></em>
+				</a></li>
+				<li class="active">Gateways</li>
+			</ol>
+		</div><!--/.row-->
+		
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						Seus Gateways
+					</div>
+					<div class="panel-body">
+
+						<% if( req.session.usuario._organizations.length > 0) { %>
+							<% for(var i = 0; i < req.session.usuario._organizations.length ; i++) { %>
+
+
+
+								<div class="panel panel-default">
+
+								    <div class="panel-heading">
+
+								      <h4 class="panel-title">
+								        <a data-toggle="collapse" href='#collapse<%= i %>'>
+								        	<b><%= req.session.usuario._organizations[i].organizationID %> - <%= req.session.usuario._organizations[i].organizationName %></b>
+
+								        	<% if( req.session.usuario._organizations[i].gateways.length > 0) { %>
+								        		A organização possui <%= req.session.usuario._organizations[i].gateways.length %> gateway(s)
+								        	<% } else { %>
+												A organização não possui gateways cadastrados
+											<% } %>
+								       	</a>
+								      </h4>
+
+								    </div>
+
+								    <div id='collapse<%=i%>' class="panel-collapse collapse bg-primary">
+
+									    <div class="panel-body table-responsive">
+										    <h4>
+										        Lista de Gateways
+										    </h4>
+
+										    <% if( req.session.usuario._organizations[i].gateways.length > 0) { %>
+										    	<table class="table table-striped table-bordered table-condensed text-center">
+										    		<th class="thead-dark">
+											    		<td>
+															MAC
+														</td>
+														<td>
+															Nome do Gateway
+														</td>
+													<th>
+													<% for(var u = 0; u < req.session.usuario._organizations[i].gateways.length ; u++) { %>
+														<tr>
+															<td>
+																<%= u+1 %>
+															</td>
+															<td>
+																<%= req.session.usuario._organizations[i].gateways[u].id %>
+															</td>
+															<td>
+																<%= req.session.usuario._organizations[i].gateways[u].name %>
+															</td>
+
+															<% if(req.session.usuario._organizations[0].isAdmin){ %>
+																<td>
+																	<button vaule='<%= req.session.usuario._organizations[i].users[u].userID%>' onclick="deletar_gateway(this.value)" class="btn btn-danger">Excluir</button>
+																</td>
+				 											<% } %>
+														</tr>
+													<% } %>
+												</table>
+											<% } else { %>
+
+												SEM GATEWAYS
+
+											<% } %>
+
+
+
+									    </div>
+
+								      <div class="panel-footer">
+								      	<% if(req.session.usuario._organizations[0].isAdmin){ %>
+											<button value='<%= req.session.usuario._organizations[i].organizationID %>' onclick="adicionarUsuario(this.value)" class="btn btn-primary">Criar Usuário</button>
+											<button vaule='<%= req.session.usuario._organizations[i].organizationID %>' onclick="deletar_org(this.value)" class="btn btn-danger">Excluir Organização</button>
+											<% } %>
+								      </div>
+
+								    </div>
+								</div>
+							<% } %>
+						<% } else { %>
+							SEM GATEWAYS
+						<% } %>
+
+					</div>
+				</div>
+			</div>
+		</div><!-- /.row -->
+        
+			
+	</div>	<!--/.main-->
+	
+	<script src="js/jquery-1.11.1.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/chart.min.js"></script>
+	<script src="js/chart-data.js"></script>
+	<script src="js/easypiechart.js"></script>
+	<script src="js/easypiechart-data.js"></script>
+	<script src="js/bootstrap-datepicker.js"></script>
+	<script src="js/custom.js"></script>
+	<script>
+		window.onload = function () {
+        var chart1 = document.getElementById("line-chart").getContext("2d");
+        window.myLine = new Chart(chart1).Line(lineChartData, {
+        responsive: true,
+        scaleLineColor: "rgba(0,0,0,.2)",
+        scaleGridLineColor: "rgba(0,0,0,.05)",
+        scaleFontColor: "#c5c7cc"
+        });
+        };
+	</script>
+		
+</body>
+</html>
