@@ -8,6 +8,7 @@
 	<link href="css/font-awesome.min.css" rel="stylesheet">
 	<link href="css/datepicker3.css" rel="stylesheet">
 	<link href="css/styles.css" rel="stylesheet">
+
 	
 	<!--Custom Font-->
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
@@ -139,10 +140,51 @@
 				 											<% } %>
 														</tr>
 														<tr>
-															<td>
-															<div id='collapse_device<%= u %>' class="panel-collapse collapse bg-primary">
-																TESTE COLLAPSE														
-															</div>
+															<td colspan="5">
+																<div id='collapse_device<%= u %>' class="panel-collapse collapse bg-primary">
+																	<% if(req.session.usuario._organizations[i].apps[u].devices.length > 0){ %>
+																		<table class="table table-striped table-bordered table-condensed text-center">
+																			<th>
+																				<td>
+																					Nome
+																				</td>
+																				<td>
+																					Descrição
+																				</td>
+																				<td>
+																					Última vez visto
+																				</td>
+																			</th>
+																			<% for(var d = 0; d < req.session.usuario._organizations[i].apps[u].devices.length; d ++){ %>
+																			<tr>
+																				<td>
+																					<%=d+1%>
+																				</td>
+																				<td>
+																					<%=req.session.usuario._organizations[i].apps[u].devices[d].name%>
+																				</td>
+																				<td>
+																					<%=req.session.usuario._organizations[i].apps[u].devices[d].description%>
+																				</td>
+																				<td>
+																					<time>
+																					<%= new Date(req.session.usuario._organizations[i].apps[u].devices[d].lastSeenAt).toLocaleString()
+																					%>
+																					</time>
+																				</td>
+																				<% if(req.session.usuario._organizations[0].isAdmin){ %>
+																					<td>
+																						<button vaule='<%= req.session.usuario._organizations[i].users[u].userID%>' onclick="deletar_device(this.value)" class="btn btn-danger">Excluir Device</button>
+																					</td>
+									 											<% } %>
+									 										</tr>
+																			<% } %>
+																		</table>
+						 											<% }else{ %>
+						 												SEM DEVICES
+						 											<% } %>
+																														
+																</div>
 															</td>
 														</tr>
 														
