@@ -21,9 +21,11 @@ async function atualizaDadosUser(user_obj, req, res, pagina) {
     var status = await user_obj.get_users()
     var status = await user_obj.get_gateways()
     var status = await user_obj.get_apps()
+    var status = await user_obj.get_devices()
     console.log('conferindo users');
     console.log(user_obj);
     console.log(user_obj.organizations[0].apps);
+    console.log(user_obj.organizations[0].apps[0].devices);
     req.session.usuario = user_obj;
     req.session.save();
     res.render(pagina, { req }); //

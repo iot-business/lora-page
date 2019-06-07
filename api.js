@@ -106,11 +106,40 @@ async function get_apps(organizations,jwt){
     return 'ok'
 }
 
+async function get_devices(organizations,jwt){
+
+    console.log('buscando lista de devices')
+    for(var i =0; i < organizations.length; i++){
+
+        for(var d = 0; d < organizations[i].apps.length; d++){
+
+            var devices = []
+            await request.get({
+                headers: { 'Accept': 'application/json', 'Grpc-Metadata-Authorization': 'Bearer '+jwt },
+                url:    'http://191.252.1.150:8080/api/devices?limit=999&applicationID='+ organizations[i].apps[d].id ,
+            }, function(error, response, body){
+                var resposta = JSON.parse(body);
+                if(resposta.totalCount > 0){
+                    devices = resposta['result']
+                }
+            }).catch(function(err){
+                console.log(err)
+            });
+
+            organizations[i].apps[d].devices = devices
+
+        }
+
+    }
+    return 'ok'
+}
+
 
 module.exports = {
     deletar_organizacao,
     lista_de_usuarios,
     get_organizations,
     get_gateways,
-    get_apps
+    get_apps,
+    get_devices
 }

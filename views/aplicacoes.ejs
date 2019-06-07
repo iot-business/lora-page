@@ -111,6 +111,9 @@
 														<td>
 															Descrição
 														</td>
+														<td>
+															Devices
+														</td>
 													<th>
 													<% for(var u = 0; u < req.session.usuario._organizations[i].apps.length ; u++) { %>
 														<tr>
@@ -118,10 +121,15 @@
 																<%= u+1 %>
 															</td>
 															<td>
-																<%= req.session.usuario._organizations[i].apps[u].name %>
+																<a data-toggle="collapse" href='#collapse_device<%= u %>'>
+																	<%= req.session.usuario._organizations[i].apps[u].name %>
+																</a>
 															</td>
 															<td>
 																<%= req.session.usuario._organizations[i].apps[u].description %>
+															</td>
+															<td>
+																<%= req.session.usuario._organizations[i].apps[u].devices.length %>
 															</td>
 
 															<% if(req.session.usuario._organizations[0].isAdmin){ %>
@@ -130,6 +138,14 @@
 																</td>
 				 											<% } %>
 														</tr>
+														<tr>
+															<td>
+															<div id='collapse_device<%= u %>' class="panel-collapse collapse bg-primary">
+																TESTE COLLAPSE														
+															</div>
+															</td>
+														</tr>
+														
 													<% } %>
 												</table>
 											<% } else { %>

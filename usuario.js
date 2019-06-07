@@ -66,6 +66,12 @@ module.exports = {
             return 'ok'
         }
 
+        async get_devices() {
+            console.log('aqui dentro do get devices')
+            var users = await api.get_devices(this._organizations, this.jwt)
+            return 'ok'
+        }
+
     }
 
 }
