@@ -41,40 +41,33 @@ module.exports = {
 
 
         async get_organizations() {
-            console.log('aqui dentro do get orga')
             var orgs = await api.get_organizations(this.jwt)
-            console.log('retorno do get ORGS : ' + orgs);
             this._organizations = orgs
             return 'ok'
         }
 
         async get_users() {
-            console.log('aqui dentro do get users')
             var users = await api.lista_de_usuarios(this._organizations, this.jwt)
             return 'ok'
         }
 
         async get_gateways() {
-            console.log('aqui dentro do get gateways')
             var users = await api.get_gateways(this._organizations, this.jwt)
             return 'ok'
         }
 
         async get_apps() {
-            console.log('aqui dentro do get apps')
             var users = await api.get_apps(this._organizations, this.jwt)
             return 'ok'
         }
 
         async get_devices() {
-            console.log('aqui dentro do get devices')
             var users = await api.get_devices(this._organizations, this.jwt)
             return 'ok'
         }
 
         async get_devices_data(dbo) {
-            console.log('aqui dentro do get devices data')
-            var users = await api.get_devices_data(this._organizations, this.jwt, dbo)
+            var users = await api.get_devices_data(this._organizations, dbo)
             return 'ok'
         }
 

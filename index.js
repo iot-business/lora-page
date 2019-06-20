@@ -14,29 +14,11 @@ app.use(cookieParser());
 
 const PORT = 3000 || process.env;
 
-var expiryDate = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+// var expiryDate = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
 
 MongoClient.connect(url, function(err, db) {
     if (err) throw err;
     var dbo = db.db("lora_server");
-
-
-    async function atualizaDadosUser(user_obj, req, res, pagina) {
-        user_obj = new user.Usuario(user_obj._login, user_obj._pass, user_obj._jwt)
-        var status = await user_obj.get_organizations()
-        var status = await user_obj.get_users()
-        var status = await user_obj.get_gateways()
-        var status = await user_obj.get_apps()
-        var status = await user_obj.get_devices()
-        var status = await user_obj.get_devices_data(dbo)
-        console.log('conferindo users');
-        console.log(user_obj);
-        console.log(user_obj.organizations[0].apps);
-        console.log(user_obj.organizations[0].apps[0].devices[0]);
-        req.session.usuario = user_obj;
-        req.session.save();
-        res.render(pagina, { req }); //
-    }
 
 
     app.use(session({
@@ -47,9 +29,25 @@ MongoClient.connect(url, function(err, db) {
         cookie: {
             secure: false,
             httpOnly: false,
-            expires: expiryDate
+            // expires: expiryDate
         }
     }));
+
+
+    async function atualizaDadosUser(user_obj, req, res, pagina) {
+        user_obj = new user.Usuario(user_obj._login, user_obj._pass, user_obj._jwt)
+        var status = await user_obj.get_organizations()
+        var status = await user_obj.get_users()
+        var status = await user_obj.get_gateways()
+        var status = await user_obj.get_apps()
+        var status = await user_obj.get_devices()
+        var status = await user_obj.get_devices_data(dbo)
+        // console.log('conferindo dados');
+        // console.log(user_obj._organizations[0].apps[0].devices[0].data[0].rxInfo);
+        req.session.usuario = user_obj;
+        req.session.save();
+        res.render(pagina, { req }); //
+    }
 
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));

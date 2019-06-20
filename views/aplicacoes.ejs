@@ -116,6 +116,8 @@
 															Devices
 														</td>
 													<th>
+
+
 													<% for(var u = 0; u < req.session.usuario._organizations[i].apps.length ; u++) { %>
 														<tr>
 															<td>
@@ -139,14 +141,20 @@
 																</td>
 				 											<% } %>
 														</tr>
+
+
 														<tr>
 															<td colspan="5">
 																<div id='collapse_device<%= u %>' class="panel-collapse collapse bg-primary">
+																	<h3>Devices da Aplicação <%= req.session.usuario._organizations[i].apps[u].name %> </h3>
 																	<% if(req.session.usuario._organizations[i].apps[u].devices.length > 0){ %>
 																		<table class="table table-striped table-bordered table-condensed text-center">
 																			<th>
 																				<td>
 																					Nome
+																				</td>
+																				<td>
+																					DevEUI
 																				</td>
 																				<td>
 																					Descrição
@@ -161,15 +169,23 @@
 																					<%=d+1%>
 																				</td>
 																				<td>
+																					<a data-toggle="collapse" href='#collapse_device_data<%= d %>'>
 																					<%=req.session.usuario._organizations[i].apps[u].devices[d].name%>
+																					</a>
 																				</td>
+																				<td>
+																	    			<%=
+																	    			req.session.usuario._organizations[i].apps[u].devices[d].devEUI 
+																	    			%>
+																	    		</td>
+
 																				<td>
 																					<%=req.session.usuario._organizations[i].apps[u].devices[d].description%>
 																				</td>
 																				<td>
 																					<time>
-																					<%= new Date(req.session.usuario._organizations[i].apps[u].devices[d].lastSeenAt).toLocaleString()
-																					%>
+																					<%= new Date(req.session.usuario._organizations[i].apps[u].devices[d].lastSeenAt).toLocaleString() %>
+
 																					</time>
 																				</td>
 																				<% if(req.session.usuario._organizations[0].isAdmin){ %>
@@ -178,6 +194,66 @@
 																					</td>
 									 											<% } %>
 									 										</tr>
+
+
+									 										<tr>
+																				<td colspan="6">
+																					<div id='collapse_device_data<%= d %>' class="panel-collapse collapse bg-primary">
+																						<h3>Dados do Device <%=req.session.usuario._organizations[i].apps[u].devices[d].name%> </h3>
+																						<% if(req.session.usuario._organizations[i].apps[u].devices[d].data.length > 0){ %>
+																							<table class="table table-striped table-bordered table-condensed text-center">
+																					    		<th class="thead-dark">
+																									<td>Frequencia</td>
+																									<td>Dados</td>
+																									<td>Data/Hora</td>
+																									<td>RSSI</td>
+																									<td>SNR</td>
+																									<td>Ver imagem</td>
+																								<th>
+
+																								<% for(var data = 0; data < req.session.usuario._organizations[i].apps[u].devices[d].data.length; data++ ) { %>
+																								<tr class="thead-dark">
+																									<td>
+																										<%=
+																										data+1
+																										%>
+																									</td>
+																									<td>
+																										<%=
+																										req.session.usuario._organizations[i].apps[u].devices[d].data[data].txInfo.frequency 
+																										%>
+																									</td>
+																									<td>
+																										<%=
+																										req.session.usuario._organizations[i].apps[u].devices[d].data[data].data
+																										%>
+																									</td>
+																									<td>
+																										<%=
+																										new Date(req.session.usuario._organizations[i].apps[u].devices[d].data[data].date).toLocaleString() 
+																										%>
+																									</td>
+																									<td>
+																										<%=
+																										req.session.usuario._organizations[i].apps[u].devices[d].data[data].rxInfo[0].rssi
+																										%>
+																									</td>
+																									<td>
+																										<%=
+																										req.session.usuario._organizations[i].apps[u].devices[d].data[data].rxInfo[0].loRaSNR
+																										%>
+																									</td>
+																								<tr>
+
+																								<% } %>
+																								
+																							</table>
+											 											<% }else{ %>
+											 												SEM DADOS
+											 											<% } %>
+																																			
+																					</div>
+																				</td>
 																			<% } %>
 																		</table>
 						 											<% }else{ %>
